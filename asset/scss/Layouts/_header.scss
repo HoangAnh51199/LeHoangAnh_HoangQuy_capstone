@@ -1,0 +1,27 @@
+header {
+  background-color: $color-1;
+  width: 100%;
+
+  .navbar-brand {
+    @include style-text($fs-6, $color-2, $fw-2);
+  }
+  .navbar-collapse {
+    .navbar-nav {
+      .nav-link {
+        @include style-text($fs-2, $color-3, $fw-1);
+        transition: all 0.2s;
+        padding: $pd-1;
+        &:hover {
+          @include style-text($fs-2, $color-2, $fw-1);
+        }
+      }
+    }
+    .cart{
+        cursor: pointer;
+        .fa-cart-shopping{
+            color: $color-2;
+            font-size: $fs-3;
+        }
+    }
+  }
+}
