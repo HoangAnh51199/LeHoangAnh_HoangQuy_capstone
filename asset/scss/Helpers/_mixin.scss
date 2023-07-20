@@ -1,0 +1,10 @@
+@mixin style-text($fs , $cl, $fw){
+    font-size: $fs;
+    color: $cl;
+    font-weight: $fw;
+}
+@mixin button-style($py,$px,$fs,$mx){
+    padding: $py $px;
+    font-size: $fs;
+    margin: 0 $mx;
+}
