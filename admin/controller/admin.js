@@ -10,7 +10,7 @@ function getListProduct() {
   promise
     .then(function (result) {
       console.log(result);
-      renderUI(result.data); //gọi hàm render truyền data
+      renderUI(result.data); //gọi hàm render truyền data(biendata=result)) ,.data lay phan data api thoi.
 
     })
     .catch(function (error) {
@@ -105,9 +105,37 @@ function SearchProduct() {
 
   var txtSearch = getEle("txtSearch").value;
   console.log(txtSearch);
-  var mangTimKiem = api.timKiemProductApi(txtSearch); // mảngtkiem chứa các đối tượng nv đang tìm
+  var promise = api.timKiemProductApi(); // mảngtkiem chứa các đối tượng nv đang tìm
+  
+  promise
+         .then(function (result) {
+            console.log(result);
+        
+            var mangTimKiem = []; //rỗng
+                        for (var i = 0; i < result.data.length; i++) {
+                            var product = result.data[i]; //bien nv chua  từng chữ duyệt mảng
+                            var keywordLowercase = txtSearch.toLowerCase();
+                            var namePDLowerCase = product.name.toLowerCase();
+                            console.log(product);
 
-  renderUI(mangTimKiem);//render ra màn hình table
+                            if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
+                                mangTimKiem.push(product); //push data product vào mảng
+                            }
+                        }
+                        console.log('mangTimKiem',mangTimKiem);
+                        
+                        renderUI(mangTimKiem);
+                      
+                        
+           
+        
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+
+ //render ra màn hình table
 
 }
 
@@ -159,7 +187,7 @@ function addProduct() {
   //tạo đối tượng product từ lớp đối tượng Product
   var product = new Product("", tenSP, giaSP, manHinhSP, cameraSau, cameraTruoc, hinhSP, moTa, loaiSP);
 
-  var promise = api.addProductApi(product);
+  var promise = api.addProductApi(product);//truyen bien product
 
   promise
     .then(function () {
@@ -167,6 +195,77 @@ function addProduct() {
       getListProduct();
       //close modal
       document.getElementsByClassName("close")[0].click();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
+}
+
+function editProduct(id) {
+  //dom tới .modal-title thay đối nội dung 
+
+  document.getElementsByClassName("modal-title")[0].innerHTML = "Sửa SP";
+
+  //Tạo thẻ button  "Update Product" => gắn button vào .modal-footer
+  var buttonUpdate = `<button class="btn btn-success" onclick="updateProduct(${id})" > Update </button>`;
+  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonUpdate;
+  console.log(id);
+
+
+  api
+    .getProductById(id)
+    .then(function (result) {
+      console.log(result.data);//show data ra các thẻ input 
+      //Dom tới các thẻ input lấy value
+      getEle("TenSP").value = result.data.name;
+      getEle("GiaSP").value= result.data.price;
+      getEle("ManHinhSP").value= result.data.screen;
+      getEle("cameraSau").value =result.data.backCamera;
+      getEle("cameraTruoc").value=result.data.frontCamera;
+      getEle("HinhSP").value=result.data.img;
+      getEle("MoTa").value=result.data.desc;
+      getEle("LoaiSP").value=result.data.type;
+
+
+
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+}
+
+//update product
+function updateProduct(id) {
+  //dom tới thẻ input lấy value 
+  //Dom tới các thẻ input lấy value
+  var tenSP = getEle("TenSP").value;
+  var giaSP = getEle("GiaSP").value;
+  var manHinhSP = getEle("ManHinhSP").value;
+  var cameraSau = getEle("cameraSau").value;
+  var cameraTruoc = getEle("cameraTruoc").value;
+  var hinhSP = getEle("HinhSP").value;
+  var moTa = getEle("MoTa").value;
+  var loaiSP = getEle("LoaiSP").value;
+
+
+  //tạo đối tượng product
+  var product = new Product(id, tenSP, giaSP, manHinhSP, cameraSau, cameraTruoc, hinhSP, moTa, loaiSP);
+//gui product moi sua len api
+  console.log(product);
+
+  api.updateProductApi(product)
+    .then(function () {
+      //close modal 
+      //close modal
+      document.getElementsByClassName("close")[0].click();
+      //render list procduct
+      getListProduct();
+
+
     })
     .catch(function (error) {
       console.log(error);
