@@ -1,29 +1,79 @@
 var api = new Service();
 // var validation = new Validation();
 
+
+
+
+
+
 function getEle(id) {
   return document.getElementById(id);
 }
+
+
+
+let arrApi = []; // mang rong
+
 function getListProduct() {
   var promise = api.getListProductApi();
-
   promise
     .then(function (result) {
-      console.log(result);
-      renderUI(result.data); //gọi hàm render truyền data(biendata=result)) ,.data lay phan data api thoi.
+      //console.log(result);
+      renderUI(result.data); //gọi hàm render truyền data(biendata=result)) , .data lay phan data api thoi.
+
+
+      for (var i = 0; i < result.data.length; i++) {
+        arrApi.push(result.data[i]);
+      }
+      console.log(arrApi);
+
+      return arrApi; //lấy arr từ promise
 
     })
+
     .catch(function (error) {
       console.log(error);
+
     });
-
-
 }
 
-getListProduct();//gọi  function getlist để lấy data
+getListProduct();//gọi  function getlist để lấy dataz
+
+
+//  async function getJSONAsync() {
+
+//   // The await keyword saves us from having to write a .then() block.
+//    let json = await axios.get('https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products');
+
+//    //The result of the GET request is available in the json variable.
+//       //  return it just like in a regular synchronous function.
+//    return json;
+// }
+// //async giong promise
+
+//  getJSONAsync()
+//  .then(function (result) {
+//    // Do something with result.
+//    console.log(result.data);
+//    renderUI(result.data);
+//    for (var i = 0; i < result.data.length; i++) {
+//     arrApi.push(result.data[i]);
+//    console.log(arrApi);
+//    return arrApi;
+//    }
+//})
+
+//.catch(function (error) {
+//console.log(error);
+
+//});
+
+
+
 
 function renderUI(data) { //dat bien data để truyền result vào 
   var content = "";
+
 
   for (var i = 0; i < data.length; i++) { // duyet mang 
     var product = data[i]; // data lấy noi dung doi tuong 
@@ -40,7 +90,7 @@ function renderUI(data) { //dat bien data để truyền result vào
               <td>${product.name}</td>
               <td>
               <div class="d-flex ">
-              ${product.price}
+              ${VND.format(product.price)}
               <span style='font: -webkit-mini-control;
               font-size: 25px;' class="ml-1">&#8363;  </span>   
               </div>
@@ -70,74 +120,135 @@ function renderUI(data) { //dat bien data để truyền result vào
   getEle("tblDanhSachSP").innerHTML = content;
 }
 
-function sort() {
+//console.log(arrApi);
+//console.log(arrApi.length);
+
+
+
+let arrsapXep = [];
+
+function sapXep() {
 
   var sort = getEle("sapXepSP").value;
-  console.log(sort);
-  var newArray = [];
-  var promise = api.getListProductApi();
+  // console.log(arrApi);
 
-  promise
-    .then(function (result) {
-      console.log(result);
+  let clonedArrApi = [...arrApi];
+  console.log(clonedArrApi);
+  //console.log('sapxep-arraylenght:', arrdemo.length);
+
+  if (sort === "sortMintoMax") {
+
+    //zconsole.log(data);
+
+    for (var i = 0; i < clonedArrApi.length - 1; i++) {//bat dau tu dau mang
+
+      for (var j = i + 1; j < clonedArrApi.length; j++) {
+
+        if (clonedArrApi[i].price > clonedArrApi[j].price) {// so sánh giá tiên
+
+          // hoan vi
+          var temp = clonedArrApi[i]; //vd :temp chua doi tuong tạm thời
+          clonedArrApi[i] = clonedArrApi[j];//price 3>1 đổi chỗ vi trí [i] cho [j] vitri [i] chứa data[j]
+          clonedArrApi[j] = temp;//data.[j]  chứa nội dung vitri [i]
+
+        }
+      }
+    };
+
+    renderUI(clonedArrApi);
 
 
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    for (var z = 0; z < clonedArrApi.length; z++) {
+      arrsapXep.push(clonedArrApi[z]);
+    }
 
-  console.log(promise);
 
-  // for (var i = 0; i < listNumber.length - 1; i++) {
-  //   for (var j = i + 1; j < listNumber.length; j++) {
-  //     if (listNumber[i] > listNumber[j]) {
-  //       // hoan vi
-  //       var temp = listNumber[i];
-  //       listNumber[i] = listNumber[j];
-  //       listNumber[j] = temp;
-  //     }
-  //   }
-  // }
+    console.log(arrsapXep);
+    return arrsapXep;
+
+
+  } else if (sort === "sortMaxtoMin") {
+    for (var i = 0; i < clonedArrApi.length - 1; i++) {//bat dau tu dau mang
+
+      for (var j = i + 1; j < clonedArrApi.length; j++) {
+
+        if (clonedArrApi[i].price < clonedArrApi[j].price) {// so sánh giá tiên
+
+          //     // hoan vi
+          var temp = clonedArrApi[i]; //vd :temp chua doi tuong tạm thời
+          clonedArrApi[i] = clonedArrApi[j];//price 3>1 đổi chỗ vi trí [i] cho [j] vitri [i] chứa data[j]
+          clonedArrApi[j] = temp;//data.[j]  chứa nội dung vitri [i]
+        }
+      }
+    };
+
+    renderUI(clonedArrApi);
+
+    for (var z = 0; z < clonedArrApi.length; z++) {
+      arrsapXep.push(clonedArrApi[z]);
+    }
+
+
+    console.log(arrsapXep);
+    return arrsapXep;
+  }
 }
 
+
+
+//var arrsapXep = sapXep();
+//console.log(arrsapXep);
+
+
+
+
+console.log(arrApi);
 function SearchProduct() {
 
   var txtSearch = getEle("txtSearch").value;
   console.log(txtSearch);
-  var promise = api.timKiemProductApi(); // mảngtkiem chứa các đối tượng nv đang tìm
-  
-  promise
-         .then(function (result) {
-            console.log(result);
-        
-            var mangTimKiem = []; //rỗng
-                        for (var i = 0; i < result.data.length; i++) {
-                            var product = result.data[i]; //bien nv chua  từng chữ duyệt mảng
-                            var keywordLowercase = txtSearch.toLowerCase();
-                            var namePDLowerCase = product.name.toLowerCase();
-                            console.log(product);
+  var mangTimKiem = []; //mảng rỗng
+  console.log(arrApi);
+  var sort = arrsapXep;
+  //console.log(sort);
 
-                            if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
-                                mangTimKiem.push(product); //push data product vào mảng
-                            }
-                        }
-                        console.log('mangTimKiem',mangTimKiem);
-                        
-                        renderUI(mangTimKiem);
-                      
-                        
-           
-        
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+  if (sort.length > 0) {
+   //console.log(123);
+    for (var i = 0; i < sort.length; i++) {//duyet result
+      var product = sort[i]; // 1  doi tuong
+      var keywordLowercase = txtSearch.toLowerCase();
+      var namePDLowerCase = product.name.toLowerCase();
+      console.log(product);
+
+     if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
+         mangTimKiem.push(product); //push data product vào mảng
+      }
+     }
+    // console.log(mangTimKiem);
+     renderUI(mangTimKiem);//render ra màn hình table
+
+  } else if(sort.length === 0){
+
+    //console.log(234);
+    for (var i = 0; i < arrApi.length; i++) {//duyet result
+      var product = arrApi[i]; // 1  doi tuong
+      var keywordLowercase = txtSearch.toLowerCase();
+      var namePDLowerCase = product.name.toLowerCase();
+      console.log(product);
+
+      if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
+        mangTimKiem.push(product); //push data product vào mảng
+      }
+    }
+    //console.log('mangTimKiem', mangTimKiem);
+
+    renderUI(mangTimKiem);//render ra màn hình table
 
 
- //render ra màn hình table
+ }
 
 }
+
 
 getEle("txtSearch").addEventListener("keyup", SearchProduct);
 
@@ -220,13 +331,13 @@ function editProduct(id) {
       console.log(result.data);//show data ra các thẻ input 
       //Dom tới các thẻ input lấy value
       getEle("TenSP").value = result.data.name;
-      getEle("GiaSP").value= result.data.price;
-      getEle("ManHinhSP").value= result.data.screen;
-      getEle("cameraSau").value =result.data.backCamera;
-      getEle("cameraTruoc").value=result.data.frontCamera;
-      getEle("HinhSP").value=result.data.img;
-      getEle("MoTa").value=result.data.desc;
-      getEle("LoaiSP").value=result.data.type;
+      getEle("GiaSP").value = result.data.price;
+      getEle("ManHinhSP").value = result.data.screen;
+      getEle("cameraSau").value = result.data.backCamera;
+      getEle("cameraTruoc").value = result.data.frontCamera;
+      getEle("HinhSP").value = result.data.img;
+      getEle("MoTa").value = result.data.desc;
+      getEle("LoaiSP").value = result.data.type;
 
 
 
@@ -254,7 +365,7 @@ function updateProduct(id) {
 
   //tạo đối tượng product
   var product = new Product(id, tenSP, giaSP, manHinhSP, cameraSau, cameraTruoc, hinhSP, moTa, loaiSP);
-//gui product moi sua len api
+  //gui product moi sua len api
   console.log(product);
 
   api.updateProductApi(product)
