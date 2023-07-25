@@ -48,9 +48,9 @@
     <div class="display-4 my-4"> Quản lý sản phẩm </div>
 
 
-    <select class=" form-control my-3" id="sapXepSP" onchange="sapXep()" >
+    <select class=" form-control my-3" id="sapXepSP" onchange="sapXep(arrApi)" >
       <span class="caret"></span>
-      <option>Chọn sắp xếp</option>
+      <option value="">Chọn sắp xếp</option>
 
       <option class="custom-select"  value="sortMintoMax">Từ bé đến lớn</option>
       <option class="custom-select" value="sortMaxtoMin">Từ lớn đến bé</option>
@@ -82,7 +82,7 @@
           <div class="col-md-4">
             <!-- BEGIN TÌM KIẾM -->
             <div class="input-group mb-3">
-              <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa" />
+              <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa" onkeyup="SearchProduct(arrApi)" />
               <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-search"></i></span>
               </div>
