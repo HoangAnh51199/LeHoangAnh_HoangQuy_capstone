@@ -140,25 +140,25 @@ function sapXep() {
 
     //zconsole.log(data);
 
-    for (var i = 0; i < clonedArrApi.length - 1; i++) {//bat dau tu dau mang
+    for (var i = 0; i <  clonedArrApi.length - 1; i++) {//bat dau tu dau mang
 
-      for (var j = i + 1; j < clonedArrApi.length; j++) {
+      for (var j = i + 1; j <  clonedArrApi.length; j++) {
 
-        if (clonedArrApi[i].price > clonedArrApi[j].price) {// so sánh giá tiên
+        if ( clonedArrApi[i].price >  clonedArrApi[j].price) {// so sánh giá tiên
 
           // hoan vi
-          var temp = clonedArrApi[i]; //vd :temp chua doi tuong tạm thời
-          clonedArrApi[i] = clonedArrApi[j];//price 3>1 đổi chỗ vi trí [i] cho [j] vitri [i] chứa data[j]
+          var temp =  clonedArrApi[i]; //vd :temp chua doi tuong tạm thời
+          clonedArrApi[i] =  clonedArrApi[j];//price 3>1 đổi chỗ vi trí [i] cho [j] vitri [i] chứa data[j]
           clonedArrApi[j] = temp;//data.[j]  chứa nội dung vitri [i]
 
         }
       }
     };
 
-    renderUI(clonedArrApi);
+    renderUI( clonedArrApi);
 
 
-    for (var z = 0; z < clonedArrApi.length; z++) {
+    for (var z = 0; z <  clonedArrApi.length; z++) {
       arrsapXep.push(clonedArrApi[z]);
     }
 
@@ -243,6 +243,9 @@ function SearchProduct() {
     //console.log('mangTimKiem', mangTimKiem);
 
     renderUI(mangTimKiem);//render ra màn hình table
+     arrApi = mangTimKiem ;
+     return arrApi;
+
 
 
  }
