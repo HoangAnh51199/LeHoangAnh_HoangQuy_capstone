@@ -8,14 +8,15 @@ function getEle(id) {
 let arrApi = []; // mang rong
 
 function getListProduct() {
+  getEle("loader").style.display = "block";
   var promise = api.getListProductApi();
   promise
     .then(function (result) {
       //console.log(result);
       renderUI(result.data); //gọi hàm render truyền data(biendata=result)) , .data lay phan data api thoi.
-
+      getEle("loader").style.display = "none";
       arrApi = [...result.data];
-
+      return arrApi;
       console.log(arrApi);
     })
 
@@ -147,11 +148,11 @@ function sapXep(data) {
 
 
   }
-  // else if (sort === "" && txtSearch == "") {
-  //   //data.splice(0, data.length);
-  //   getListProduct();
-  // }
-  debugger
+  else if (sort === "" && txtSearch == "") {
+    //data.splice(0, data.length);
+    getListProduct();
+  }
+
 }
 
 
@@ -242,15 +243,35 @@ getEle("btnThemSP").onclick = function () {
   document.getElementsByClassName("modal-title")[0].innerHTML = "Thêm SP";
 
   //Tạo thẻ button  "Add Product" => gắn button vào .modal-footer
-  var buttonAdd = `<button class="btn btn-success" onclick="addProduct()">Add</button>`;
-  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonAdd; //[0] vitri class đầu tiên
+  var buttonAdd = `<button class="btn btn-success" onclick="addProduct(true)">Add</button>`;
+
+  var buttonclose = '<button id="btnDong" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>';
+  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonAdd + buttonclose; //[0] vitri class đầu tiên
+  //document.getElementsByClassName("modal-footer")[0].innerHTML = buttonclose;
+  console.log(123);
+  getEle("formNhap").reset();//reset form về ban đầu trống input
+  getEle("TenSP").disabled = false;
+
+  getEle("txtErrorTenSP").style.display = "none";
+  getEle("txtErrorGiaSP").style.display = "none";
+  getEle("txtErrorManSP").style.display = "none";
+  getEle("txtErrorCameraBehind").style.display = "none";
+  getEle("txtErrorCameraFront").style.display = "none";
+  getEle("txtErrorImg").style.display = "none";
+  getEle("txtErrorDes").style.display = "none";
+  getEle("txtErrorType").style.display = "none";
 };
 
-/**
- * Add Product
- */
-function addProduct() {
-  //Dom tới các thẻ input lấy value
+
+function layThongTin(event) { //onkeyup,onchange
+  var inputElement = event.target;
+  var inputValue = inputElement.value;
+  console.log(inputValue);
+  console.log(inputElement);
+  console.log(inputElement.id);
+  /**
+      * Dom lay thong tin tu cac the input
+      */
   var tenSP = getEle("TenSP").value;
   var giaSP = getEle("GiaSP").value;
   var manHinhSP = getEle("ManHinhSP").value;
@@ -260,34 +281,181 @@ function addProduct() {
   var moTa = getEle("MoTa").value;
   var loaiSP = getEle("LoaiSP").value;
 
-  //tạo đối tượng product từ lớp đối tượng Product
-  var product = new Product(
-    "",
-    tenSP,
-    giaSP,
-    manHinhSP,
-    cameraSau,
-    cameraTruoc,
-    hinhSP,
-    moTa,
-    loaiSP
-  );
 
-  var promise = api.addProductApi(product); //truyen bien product
+  switch (inputElement.id) {
+    case 'TenSP':
 
-  promise
-    .then(function () {
-      getListProduct();
-      //close modal
-      alert("thêm " + tenSP + " thành công");
-      document.getElementsByClassName("close")[0].click();
+      validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+        &&
+        validation.kiemtraTenSpTonTai(
+          tenSP,
+          "txtErrorTenSP",
+          "(*) tên sản phẩm đã tồn tại",
+          arrApi // biến list 
+        ) && validation.kiemtraDodaiKyTu(
+          tenSP,
+          "txtErrorTenSP",
+          "(*) vui long nhap tu 4-12 ký tự ",
+          4,
+          12
+        );
+      break;
 
-      //re-render UI
-      getListProduct();
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    case 'GiaSP':
+
+      validation.kiemtraRong(giaSP, "txtErrorGiaSP", "(*) vui lòng không để trống ")
+        &&
+        validation.checkPattern(
+          giaSP,
+          "txtErrorGiaSP",
+          "(*) chỉ được nhập số number  ",
+          /^\d+$/
+
+        );
+      break;
+
+    case 'ManHinhSP':
+      validation.kiemtraRong(manHinhSP, "txtErrorManSP", "(*) vui lòng không để trống ");
+      break;
+
+    case 'cameraSau':
+      validation.kiemtraRong(cameraSau, "txtErrorCameraBehind", "(*) vui lòng không để trống ");
+      break;
+
+    case 'cameraTruoc':
+      validation.kiemtraRong(cameraTruoc, "txtErrorCameraFront", "(*) vui lòng không để trống ");
+
+      break;
+
+    case 'HinhSP':
+      validation.kiemtraRong(hinhSP, "txtErrorImg", "(*) vui lòng không để trống ")
+        &&
+        validation.checkPattern(
+          hinhSP,
+          "txtErrorImg",
+          "(*) chỉ được nhập url  ",
+          /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+        );
+
+      break;
+
+    case 'MoTa':
+      validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
+      break;
+
+    case 'LoaiSP':
+      validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
+      break;
+
+  }
+}
+
+
+
+
+/**
+ * Add Product
+ */
+function addProduct(isADD) {
+
+  //Dom tới các thẻ input lấy value
+
+  var tenSP = getEle("TenSP").value;
+  var giaSP = getEle("GiaSP").value;
+  var manHinhSP = getEle("ManHinhSP").value;
+  var cameraSau = getEle("cameraSau").value;
+  var cameraTruoc = getEle("cameraTruoc").value;
+  var hinhSP = getEle("HinhSP").value;
+  var moTa = getEle("MoTa").value;
+  var loaiSP = getEle("LoaiSP").value;
+
+
+  // if (isADDTK) {//ktra bien isADD true làm trong {} ,false bỏ qua
+  //   //validation taiKhoan
+  var isvalid = true;
+  if (isADD) {
+    isvalid &= validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+      &&
+      validation.kiemtraTenSpTonTai(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) tên sản phẩm đã tồn tại",
+        arrApi // biến list 
+      ) && validation.kiemtraDodaiKyTu(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) vui long nhap tu 4-12 ký tự ",
+        4,
+        12
+      )
+  };
+
+
+  isvalid &= validation.kiemtraRong(giaSP, "txtErrorGiaSP", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      giaSP,
+      "txtErrorGiaSP",
+      "(*) chỉ được nhập số number  ",
+      /^\d+$/
+
+    );
+
+  isvalid &= validation.kiemtraRong(manHinhSP, "txtErrorManSP", "(*) vui lòng không để trống ");
+
+  isvalid &= validation.kiemtraRong(cameraSau, "txtErrorCameraBehind", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(cameraTruoc, "txtErrorCameraFront", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(hinhSP, "txtErrorImg", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      hinhSP,
+      "txtErrorImg",
+      "(*) chỉ được nhập url  ",
+      /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+    );
+  isvalid &= validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
+
+
+
+
+
+  if (isvalid) {
+
+    //tạo đối tượng product từ lớp đối tượng Product
+    var product = new Product(
+      "",
+      tenSP,
+      giaSP,
+      manHinhSP,
+      cameraSau,
+      cameraTruoc,
+      hinhSP,
+      moTa,
+      loaiSP
+    );
+
+
+
+    var promise = api.addProductApi(product); //truyen bien product
+
+    promise
+      .then(function () {
+        getListProduct();
+        //close modal
+        alert("thêm " + tenSP + " thành công");
+        document.getElementsByClassName("close")[0].click();
+
+        //re-render UI
+        getListProduct();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  return null;
 }
 
 function editProduct(id) {
@@ -296,8 +464,9 @@ function editProduct(id) {
   document.getElementsByClassName("modal-title")[0].innerHTML = "Sửa SP";
 
   //Tạo thẻ button  "Update Product" => gắn button vào .modal-footer
-  var buttonUpdate = `<button class="btn btn-success" onclick="updateProduct(${id})" > Update </button>`;
-  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonUpdate;
+  var buttonclose = '<button id="btnDong" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>';
+  var buttonUpdate = `<button class="btn btn-success" onclick="updateProduct(${id},false)" > Update </button>`;
+  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonUpdate + buttonclose;
   console.log(id);
 
   api
@@ -306,6 +475,7 @@ function editProduct(id) {
       console.log(result.data); //show data ra các thẻ input
       //Dom tới các thẻ input lấy value
       getEle("TenSP").value = result.data.name;
+      getEle("TenSP").disabled = true;
       getEle("GiaSP").value = result.data.price;
       getEle("ManHinhSP").value = result.data.screen;
       getEle("cameraSau").value = result.data.backCamera;
@@ -320,7 +490,7 @@ function editProduct(id) {
 }
 
 //update product
-function updateProduct(id) {
+function updateProduct(id, isADD) {
   //dom tới thẻ input lấy value
   //Dom tới các thẻ input lấy value
   var tenSP = getEle("TenSP").value;
@@ -331,36 +501,90 @@ function updateProduct(id) {
   var hinhSP = getEle("HinhSP").value;
   var moTa = getEle("MoTa").value;
   var loaiSP = getEle("LoaiSP").value;
+  var isvalid = true;
 
-  //tạo đối tượng product
-  var product = new Product(
-    id,
-    tenSP,
-    giaSP,
-    manHinhSP,
-    cameraSau,
-    cameraTruoc,
-    hinhSP,
-    moTa,
-    loaiSP
-  );
-  //gui product moi sua len api
-  console.log(product);
+  if (isADD) {
+    isvalid &= validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+      &&
+      validation.kiemtraTenSpTonTai(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) tên sản phẩm đã tồn tại",
+        arrApi // biến list 
+      ) && validation.kiemtraDodaiKyTu(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) vui long nhap tu 4-12 ký tự ",
+        4,
+        12
+      );
+  }
 
-  api
-    .updateProductApi(product)
-    .then(function () {
-      //close modal
-      getListProduct();
-      document.getElementsByClassName("close")[0].click();
-      alert("cập nhật thành công:" + tenSP);
-      //render list procduct
-      getListProduct();
-      //window.location.reload();
 
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  isvalid &= validation.kiemtraRong(giaSP, "txtErrorGiaSP", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      giaSP,
+      "txtErrorGiaSP",
+      "(*) chỉ được nhập số number  ",
+      /^\d+$/
+
+    );
+
+  isvalid &= validation.kiemtraRong(manHinhSP, "txtErrorManSP", "(*) vui lòng không để trống ");
+
+  isvalid &= validation.kiemtraRong(cameraSau, "txtErrorCameraBehind", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(cameraTruoc, "txtErrorCameraFront", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(hinhSP, "txtErrorImg", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      hinhSP,
+      "txtErrorImg",
+      "(*) chỉ được nhập url  ",
+      /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+    );
+  isvalid &= validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
+
+
+
+
+  //}
+
+  if (isvalid) {
+
+    //tạo đối tượng product
+    var product = new Product(
+      id,
+      tenSP,
+      giaSP,
+      manHinhSP,
+      cameraSau,
+      cameraTruoc,
+      hinhSP,
+      moTa,
+      loaiSP
+    );
+    //gui product moi sua len api
+    console.log(product);
+
+    api
+      .updateProductApi(product)
+      .then(function () {
+        //close modal
+        getListProduct();
+        document.getElementsByClassName("close")[0].click();
+        alert("cập nhật thành công: " + tenSP);
+        //render list procduct
+        getListProduct();
+        //window.location.reload();
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  return null;
 }
 

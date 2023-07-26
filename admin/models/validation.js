@@ -85,12 +85,12 @@ function Validation() {
         }
     };
 
-    this.kiemtraMaNVTonTai = function (value, errorId, mess, listNV) {
+    this.kiemtraTenSpTonTai = function (value, errorId, mess, listSP) {
         var isExist = false;
 
-        for (var i = 0; i < listNV.length; i++) { // ktra co ton tai hay ko
-            var nv = listNV[i];
-            if (nv.taiKhoan === value) {
+        for (var i = 0; i < listSP.length; i++) { // ktra co ton tai hay ko
+            var sp = listSP[i];
+            if (sp.name === value) {
                 isExist = true;
                 break;
             }
@@ -113,49 +113,8 @@ function Validation() {
 
     };
 
-    this.kiemtraEmailTonTai = function (value, errorId, mess, listNV) {
-        var isExist = false;
+   
 
-        for (var i = 0; i < listNV.length; i++) { // ktra co ton tai hay ko
-            var nv = listNV[i];
-            if (nv.email === value) {
-                isExist = true;
-                break;
-            }
-        }
-
-
-        if (isExist) { // isexist  co ton tai  nghĩa là trùng 
-            //false
-            getEle(errorId).innerHTML = mess;//message
-            getEle(errorId).style.display = "block";
-            return false; // tra false
-        } else {
-
-            //true
-            getEle(errorId).innerHTML = "";
-            getEle(errorId).style.display = "none";
-            return true;
-
-        }
-
-    };
-
-    this.kiemtraLuongVaSoGioLam = function (value, errorId, mess, min, max) {
-
-        if (min <= value && value <= max) {
-            //true
-            getEle(errorId).innerHTML = "";
-            getEle(errorId).style.display = "none";
-            return true;
-        } else {
-            //false 
-            getEle(errorId).innerHTML = mess;
-            getEle(errorId).style.display = "block";
-            return false;
-        }
-
-    };
 
   
 

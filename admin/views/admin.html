@@ -48,11 +48,11 @@
     <div class="display-4 my-4"> Quản lý sản phẩm </div>
 
 
-    <select class=" form-control my-3" id="sapXepSP" onchange="sapXep(arrApi)" >
+    <select class=" form-control my-3" id="sapXepSP" onchange="sapXep(arrApi)">
       <span class="caret"></span>
       <option value="">Chọn sắp xếp</option>
 
-      <option class="custom-select"  value="sortMintoMax">Từ bé đến lớn</option>
+      <option class="custom-select" value="sortMintoMax">Từ bé đến lớn</option>
       <option class="custom-select" value="sortMaxtoMin">Từ lớn đến bé</option>
     </select>
 
@@ -71,9 +71,8 @@
         <div class="row">
           <div class="col-md-8">
             <!-- BEGIN BUTTOM THÊM MỚI -->
-            <button id="btnThemSP" class="btn btn-success" 
-            data-toggle="modal" 
-            data-target="#myModal">
+            <button id="btnThemSP"   class="btn btn-success" data-toggle="modal"
+              data-target="#myModal"  onclick="myFunction()">
               <i class="fa fa-plus mr-1"></i>
               Thêm Mới
             </button>
@@ -82,7 +81,8 @@
           <div class="col-md-4">
             <!-- BEGIN TÌM KIẾM -->
             <div class="input-group mb-3">
-              <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa" onkeyup="SearchProduct(arrApi)" />
+              <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa"
+                onkeyup="SearchProduct(arrApi)" />
               <div class="input-group-append">
                 <span class="input-group-text"><i class="fa fa-search"></i></span>
               </div>
@@ -106,7 +106,9 @@
               <th>Loại</th>
               <th>Action</th>
             </thead>
-            <tbody id="tblDanhSachSP"></tbody>
+            <tbody id="tblDanhSachSP">
+              <div class="loader" id="loader"></div>
+            </tbody>
           </table>
           <!-- END TABLE SẢN PHẨM -->
         </div>
@@ -129,41 +131,74 @@
           </div>
           <!-- Modal body -->
           <div class="modal-body">
-            <div class="form-group">
-              <label>Tên Sản Phẩm</label>
-              <input id="TenSP" class="form-control" placeholder="Nhập vào tên sản phẩm" />
-            </div>
-            <div class="form-group">
-              <label>Giá</label>
-              <input id="GiaSP" class="form-control" placeholder="Nhập vào giá" />
-            </div>
-            <div class="form-group">
-              <label>Màn hình</label>
-              <input id="ManHinhSP" class="form-control" placeholder="Nhập vào màn hình sản phẩm" />
-            </div>
-            <div class="form-group">
-              <label>Camera sau</label>
-              <input id="cameraSau" class="form-control" placeholder="Nhập vào thông số camera sau sản phẩm" />
-            </div>
-            <div class="form-group">
-              <label>Camera trước</label>
-              <input id="cameraTruoc" class="form-control" placeholder="Nhập vào thông số camera trước sản phẩm" />
-            </div>
-            <div class="form-group">
-              <label>Hình ảnh</label>
-              <input id="HinhSP" class="form-control" placeholder="Nhập vào hình sản phẩm" />
-            </div>
-            <div class="form-group">
-              <label for="">Mô tả: </label>
-              <textarea class="form-control" id="MoTa" cols="10" rows="10" placeholder="Nhập vào mô tả sản phẩm"></textarea>
-            </div>
-            <div class="form-group">
-              <label>Loại</label>
-              <input id="LoaiSP" class="form-control" placeholder="Nhập vào loại sản phẩm" />
-            </div>
+            <form id="formNhap" >
+              <div class="form-group">
+                <label>Tên Sản Phẩm</label>
+                <input id="TenSP" class="form-control" placeholder="Nhập vào tên sản phẩm" onkeyup="layThongTin(event)" />
+                <div id="txtErrorTenSP" class="text-danger" style="display: block;">
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label>Giá</label>
+                <input id="GiaSP" class="form-control" placeholder="Nhập vào giá" onkeyup="layThongTin(event)"/>
+                <div id="txtErrorGiaSP" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label>Màn hình</label>
+                <input id="ManHinhSP" class="form-control" placeholder="Nhập vào màn hình sản phẩm" onkeyup="layThongTin(event)" />
+                <div id="txtErrorManSP" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Camera sau</label>
+                <input id="cameraSau" class="form-control" placeholder="Nhập vào thông số camera sau sản phẩm" onkeyup="layThongTin(event)" />
+                <div id="txtErrorCameraBehind" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Camera trước</label>
+                <input id="cameraTruoc" class="form-control" placeholder="Nhập vào thông số camera trước sản phẩm" onkeyup="layThongTin(event)"/>
+                <div id="txtErrorCameraFront" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Hình ảnh</label>
+                <input id="HinhSP" class="form-control" placeholder="Nhập vào hình sản phẩm"  onkeyup="layThongTin(event)"/>
+                <div id="txtErrorImg" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="">Mô tả: </label>
+                <textarea class="form-control" id="MoTa" cols="10" rows="10"
+                  placeholder="Nhập vào mô tả sản phẩm"  onkeyup="layThongTin(event)"></textarea>
+                <div id="txtErrorDes" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Loại</label>
+                <input id="LoaiSP" class="form-control" placeholder="Nhập vào loại sản phẩm" onkeyup="layThongTin(event)" />
+                <div id="txtErrorType" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+
+            </form>
           </div>
+
           <!-- Modal footer -->
-          <div class="modal-footer"></div>
+          <div class="modal-footer">
+
+          </div>
         </div>
       </div>
     </div>
