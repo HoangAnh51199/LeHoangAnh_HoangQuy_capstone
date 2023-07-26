@@ -1,35 +1,69 @@
 var api = new Service();
-// var validation = new Validation();
+var validation = new Validation();
 
 function getEle(id) {
   return document.getElementById(id);
 }
-function getListProduct() {
-  var promise = api.getListProductApi();
 
+let arrApi = []; // mang rong
+
+function getListProduct() {
+  getEle("loader").style.display = "block";
+  var promise = api.getListProductApi();
   promise
     .then(function (result) {
-      console.log(result);
-      renderUI(result.data); //gọi hàm render truyền data(biendata=result)) ,.data lay phan data api thoi.
-
+      //console.log(result);
+      renderUI(result.data); //gọi hàm render truyền data(biendata=result)) , .data lay phan data api thoi.
+      getEle("loader").style.display = "none";
+      arrApi = [...result.data];
+      return arrApi;
+      console.log(arrApi);
     })
+
     .catch(function (error) {
       console.log(error);
     });
-
-
 }
 
-getListProduct();//gọi  function getlist để lấy data
+getListProduct(); //gọi  function getlist để lấy dataz
 
-function renderUI(data) { //dat bien data để truyền result vào 
+//   async function getJSONAsync() {
+
+// //   // The await keyword saves us from having to write a .then() block.
+//     let json = await axios.get('https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products');
+
+// //    //The result of the GET request is available in the json variable.
+// //       //  return it just like in a regular synchronous function.
+//     return json;
+//  }
+// // //async giong promise
+
+//   getJSONAsync()
+//   .then(function (result) {
+// //    // Do something with result.
+//    console.log(result.data);
+//    renderUI(result.data);
+//    for (var i = 0; i < result.data.length; i++) {
+//    arrApi=[...result.data]
+//   return arrApi;
+//    }
+// })
+
+// .catch(function (error) {
+// console.log(error);
+
+// });
+
+function renderUI(data) {
+  //dat bien data để truyền result vào
   var content = "";
 
-  for (var i = 0; i < data.length; i++) { // duyet mang 
-    var product = data[i]; // data lấy noi dung doi tuong 
+  for (var i = 0; i < data.length; i++) {
+    // duyet mang
+    var product = data[i]; // data lấy noi dung doi tuong
 
     //Fomart VN
-    var VND = new Intl.NumberFormat('VN-vn', {
+    var VND = new Intl.NumberFormat("VN-vn", {
       //  style: 'currency',
       //  currency: 'VND'
     });
@@ -40,7 +74,7 @@ function renderUI(data) { //dat bien data để truyền result vào
               <td>${product.name}</td>
               <td>
               <div class="d-flex ">
-              ${product.price}
+              ${VND.format(product.price)}
               <span style='font: -webkit-mini-control;
               font-size: 25px;' class="ml-1">&#8363;  </span>   
               </div>
@@ -55,8 +89,7 @@ function renderUI(data) { //dat bien data để truyền result vào
               <td>${product.desc}</td>
               <td>${product.type}</td>
               <td>
-              <button class="btn btn-info" onclick=" editProduct(${product.id
-      })"
+              <button class="btn btn-info" onclick=" editProduct(${product.id})"
               data-toggle="modal"
               data-target="#myModal"
               >Sửa </button>
@@ -65,85 +98,130 @@ function renderUI(data) { //dat bien data để truyền result vào
           </td>
           </tr>
       `;
-  };
+  }
 
   getEle("tblDanhSachSP").innerHTML = content;
 }
 
-function sort() {
+//console.log(arrApi);
+//console.log(arrApi.length);
 
+let arrsapXep = [];
+
+function sapXep(data) {
+  //getListProduct();
+  var txtSearch = getEle("txtSearch").value;
   var sort = getEle("sapXepSP").value;
-  console.log(sort);
-  var newArray = [];
-  var promise = api.getListProductApi();
-
-  promise
-    .then(function (result) {
-      console.log(result);
 
 
-    })
-    .catch(function (error) {
-      console.log(error);
+
+  if (sort === "sortMintoMax") {
+
+
+    data.sort(function (a, b) {
+      return a.price - b.price;
     });
 
-  console.log(promise);
 
-  // for (var i = 0; i < listNumber.length - 1; i++) {
-  //   for (var j = i + 1; j < listNumber.length; j++) {
-  //     if (listNumber[i] > listNumber[j]) {
-  //       // hoan vi
-  //       var temp = listNumber[i];
-  //       listNumber[i] = listNumber[j];
-  //       listNumber[j] = temp;
-  //     }
-  //   }
-  // }
+    renderUI(data);
+    return data;
+
+
+
+
+  } else if (sort === "sortMaxtoMin") {
+
+
+    data.sort(function (a, b) {
+      return b.price - a.price;
+    });
+
+
+
+
+    renderUI(data);
+    return data;
+
+
+
+
+
+
+  }
+  else if (sort === "" && txtSearch == "") {
+    //data.splice(0, data.length);
+    getListProduct();
+  }
+
 }
 
-function SearchProduct() {
 
+//var arrsapXep = sapXep();
+//console.log(arrsapXep);
+
+// console.log(arrApi);
+
+
+
+
+function SearchProduct(data) {
+  var sort = getEle("sapXepSP").value;
   var txtSearch = getEle("txtSearch").value;
   console.log(txtSearch);
-  var promise = api.timKiemProductApi(); // mảngtkiem chứa các đối tượng nv đang tìm
-  
-  promise
-         .then(function (result) {
-            console.log(result);
-        
-            var mangTimKiem = []; //rỗng
-                        for (var i = 0; i < result.data.length; i++) {
-                            var product = result.data[i]; //bien nv chua  từng chữ duyệt mảng
-                            var keywordLowercase = txtSearch.toLowerCase();
-                            var namePDLowerCase = product.name.toLowerCase();
-                            console.log(product);
+  //mảng rỗng
 
-                            if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
-                                mangTimKiem.push(product); //push data product vào mảng
-                            }
-                        }
-                        console.log('mangTimKiem',mangTimKiem);
-                        
-                        renderUI(mangTimKiem);
-                      
-                        
-           
-        
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+  console.log(data);
 
 
- //render ra màn hình table
+  var mangTimKiem = [];
+  if (txtSearch) {
+
+    mangTimKiem.splice(0, data.length);
+    //   //console.log(123);
+    for (var i = 0; i < data.length; i++) {
+      //duyet result
+      var product = data[i]; // 1  doi tuong
+      var keywordLowercase = txtSearch.toLowerCase();
+      var namePDLowerCase = product.name.toLowerCase();
+      console.log(product);
+
+      if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
+        mangTimKiem.push(product); //push data product vào mảng
+
+      }
+
+    }
+
+
+    console.log(mangTimKiem);
+    sapXep(mangTimKiem);
+    console.log(sapXep(mangTimKiem));
+
+    renderUI(mangTimKiem);
+    return mangTimKiem;
+
+
+
+
+
+    //mangTimKiem.splice(0, data.length);
+
+
+  } else if (txtSearch == "") {
+    //mangTimKiem.splice(0, arrApi.length);
+    //getListProduct();
+    renderUI(data);
+
+  }
 
 }
 
-getEle("txtSearch").addEventListener("keyup", SearchProduct);
+
+//getEle("txtSearch").addEventListener("keyup", SearchProduct(arrApi));
 
 /**
-* Xoa SP
-*/
+ * Xoa SP
+ */
 function deleteProduct(id) {
   var xoa = confirm("bạn có chắc muốn xóa ");
   if (xoa) {
@@ -157,8 +235,7 @@ function deleteProduct(id) {
       .catch(function (error) {
         console.log(error);
       });
-  };
-
+  }
 }
 
 getEle("btnThemSP").onclick = function () {
@@ -166,15 +243,124 @@ getEle("btnThemSP").onclick = function () {
   document.getElementsByClassName("modal-title")[0].innerHTML = "Thêm SP";
 
   //Tạo thẻ button  "Add Product" => gắn button vào .modal-footer
-  var buttonAdd = `<button class="btn btn-success" onclick="addProduct()">Add</button>`;
-  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonAdd; //[0] vitri class đầu tiên
+  var buttonAdd = `<button class="btn btn-success" onclick="addProduct(true)">Add</button>`;
+
+  var buttonclose = '<button id="btnDong" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>';
+  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonAdd + buttonclose; //[0] vitri class đầu tiên
+  //document.getElementsByClassName("modal-footer")[0].innerHTML = buttonclose;
+  console.log(123);
+  getEle("formNhap").reset();//reset form về ban đầu trống input
+  getEle("TenSP").disabled = false;
+
+  getEle("txtErrorTenSP").style.display = "none";
+  getEle("txtErrorGiaSP").style.display = "none";
+  getEle("txtErrorManSP").style.display = "none";
+  getEle("txtErrorCameraBehind").style.display = "none";
+  getEle("txtErrorCameraFront").style.display = "none";
+  getEle("txtErrorImg").style.display = "none";
+  getEle("txtErrorDes").style.display = "none";
+  getEle("txtErrorType").style.display = "none";
 };
+
+
+function layThongTin(event) { //onkeyup,onchange
+  var inputElement = event.target;
+  var inputValue = inputElement.value;
+  console.log(inputValue);
+  console.log(inputElement);
+  console.log(inputElement.id);
+  /**
+      * Dom lay thong tin tu cac the input
+      */
+  var tenSP = getEle("TenSP").value;
+  var giaSP = getEle("GiaSP").value;
+  var manHinhSP = getEle("ManHinhSP").value;
+  var cameraSau = getEle("cameraSau").value;
+  var cameraTruoc = getEle("cameraTruoc").value;
+  var hinhSP = getEle("HinhSP").value;
+  var moTa = getEle("MoTa").value;
+  var loaiSP = getEle("LoaiSP").value;
+
+
+  switch (inputElement.id) {
+    case 'TenSP':
+
+      validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+        &&
+        validation.kiemtraTenSpTonTai(
+          tenSP,
+          "txtErrorTenSP",
+          "(*) tên sản phẩm đã tồn tại",
+          arrApi // biến list 
+        ) && validation.kiemtraDodaiKyTu(
+          tenSP,
+          "txtErrorTenSP",
+          "(*) vui long nhap tu 4-12 ký tự ",
+          4,
+          12
+        );
+      break;
+
+    case 'GiaSP':
+
+      validation.kiemtraRong(giaSP, "txtErrorGiaSP", "(*) vui lòng không để trống ")
+        &&
+        validation.checkPattern(
+          giaSP,
+          "txtErrorGiaSP",
+          "(*) chỉ được nhập số number  ",
+          /^\d+$/
+
+        );
+      break;
+
+    case 'ManHinhSP':
+      validation.kiemtraRong(manHinhSP, "txtErrorManSP", "(*) vui lòng không để trống ");
+      break;
+
+    case 'cameraSau':
+      validation.kiemtraRong(cameraSau, "txtErrorCameraBehind", "(*) vui lòng không để trống ");
+      break;
+
+    case 'cameraTruoc':
+      validation.kiemtraRong(cameraTruoc, "txtErrorCameraFront", "(*) vui lòng không để trống ");
+
+      break;
+
+    case 'HinhSP':
+      validation.kiemtraRong(hinhSP, "txtErrorImg", "(*) vui lòng không để trống ")
+        &&
+        validation.checkPattern(
+          hinhSP,
+          "txtErrorImg",
+          "(*) chỉ được nhập url  ",
+          /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+        );
+
+      break;
+
+    case 'MoTa':
+      validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
+      break;
+
+    case 'LoaiSP':
+      validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
+      break;
+
+  }
+}
+
+
+
 
 /**
  * Add Product
  */
-function addProduct() {
+function addProduct(isADD) {
+
   //Dom tới các thẻ input lấy value
+
   var tenSP = getEle("TenSP").value;
   var giaSP = getEle("GiaSP").value;
   var manHinhSP = getEle("ManHinhSP").value;
@@ -184,63 +370,128 @@ function addProduct() {
   var moTa = getEle("MoTa").value;
   var loaiSP = getEle("LoaiSP").value;
 
-  //tạo đối tượng product từ lớp đối tượng Product
-  var product = new Product("", tenSP, giaSP, manHinhSP, cameraSau, cameraTruoc, hinhSP, moTa, loaiSP);
 
-  var promise = api.addProductApi(product);//truyen bien product
+  // if (isADDTK) {//ktra bien isADD true làm trong {} ,false bỏ qua
+  //   //validation taiKhoan
+  var isvalid = true;
+  if (isADD) {
+    isvalid &= validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+      &&
+      validation.kiemtraTenSpTonTai(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) tên sản phẩm đã tồn tại",
+        arrApi // biến list 
+      ) && validation.kiemtraDodaiKyTu(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) vui long nhap tu 4-12 ký tự ",
+        4,
+        12
+      )
+  };
 
-  promise
-    .then(function () {
-      //re-render UI
-      getListProduct();
-      //close modal
-      document.getElementsByClassName("close")[0].click();
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+
+  isvalid &= validation.kiemtraRong(giaSP, "txtErrorGiaSP", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      giaSP,
+      "txtErrorGiaSP",
+      "(*) chỉ được nhập số number  ",
+      /^\d+$/
+
+    );
+
+  isvalid &= validation.kiemtraRong(manHinhSP, "txtErrorManSP", "(*) vui lòng không để trống ");
+
+  isvalid &= validation.kiemtraRong(cameraSau, "txtErrorCameraBehind", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(cameraTruoc, "txtErrorCameraFront", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(hinhSP, "txtErrorImg", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      hinhSP,
+      "txtErrorImg",
+      "(*) chỉ được nhập url  ",
+      /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+    );
+  isvalid &= validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
 
 
+
+
+
+  if (isvalid) {
+
+    //tạo đối tượng product từ lớp đối tượng Product
+    var product = new Product(
+      "",
+      tenSP,
+      giaSP,
+      manHinhSP,
+      cameraSau,
+      cameraTruoc,
+      hinhSP,
+      moTa,
+      loaiSP
+    );
+
+
+
+    var promise = api.addProductApi(product); //truyen bien product
+
+    promise
+      .then(function () {
+        getListProduct();
+        //close modal
+        alert("thêm " + tenSP + " thành công");
+        document.getElementsByClassName("close")[0].click();
+
+        //re-render UI
+        getListProduct();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  return null;
 }
 
 function editProduct(id) {
-  //dom tới .modal-title thay đối nội dung 
+  //dom tới .modal-title thay đối nội dung
 
   document.getElementsByClassName("modal-title")[0].innerHTML = "Sửa SP";
 
   //Tạo thẻ button  "Update Product" => gắn button vào .modal-footer
-  var buttonUpdate = `<button class="btn btn-success" onclick="updateProduct(${id})" > Update </button>`;
-  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonUpdate;
+  var buttonclose = '<button id="btnDong" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>';
+  var buttonUpdate = `<button class="btn btn-success" onclick="updateProduct(${id},false)" > Update </button>`;
+  document.getElementsByClassName("modal-footer")[0].innerHTML = buttonUpdate + buttonclose;
   console.log(id);
-
 
   api
     .getProductById(id)
     .then(function (result) {
-      console.log(result.data);//show data ra các thẻ input 
+      console.log(result.data); //show data ra các thẻ input
       //Dom tới các thẻ input lấy value
       getEle("TenSP").value = result.data.name;
-      getEle("GiaSP").value= result.data.price;
-      getEle("ManHinhSP").value= result.data.screen;
-      getEle("cameraSau").value =result.data.backCamera;
-      getEle("cameraTruoc").value=result.data.frontCamera;
-      getEle("HinhSP").value=result.data.img;
-      getEle("MoTa").value=result.data.desc;
-      getEle("LoaiSP").value=result.data.type;
-
-
-
-
+      getEle("TenSP").disabled = true;
+      getEle("GiaSP").value = result.data.price;
+      getEle("ManHinhSP").value = result.data.screen;
+      getEle("cameraSau").value = result.data.backCamera;
+      getEle("cameraTruoc").value = result.data.frontCamera;
+      getEle("HinhSP").value = result.data.img;
+      getEle("MoTa").value = result.data.desc;
+      getEle("LoaiSP").value = result.data.type;
     })
     .catch(function (error) {
       console.log(error);
     });
-
 }
 
 //update product
-function updateProduct(id) {
-  //dom tới thẻ input lấy value 
+function updateProduct(id, isADD) {
+  //dom tới thẻ input lấy value
   //Dom tới các thẻ input lấy value
   var tenSP = getEle("TenSP").value;
   var giaSP = getEle("GiaSP").value;
@@ -250,24 +501,90 @@ function updateProduct(id) {
   var hinhSP = getEle("HinhSP").value;
   var moTa = getEle("MoTa").value;
   var loaiSP = getEle("LoaiSP").value;
+  var isvalid = true;
+
+  if (isADD) {
+    isvalid &= validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+      &&
+      validation.kiemtraTenSpTonTai(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) tên sản phẩm đã tồn tại",
+        arrApi // biến list 
+      ) && validation.kiemtraDodaiKyTu(
+        tenSP,
+        "txtErrorTenSP",
+        "(*) vui long nhap tu 4-12 ký tự ",
+        4,
+        12
+      );
+  }
 
 
-  //tạo đối tượng product
-  var product = new Product(id, tenSP, giaSP, manHinhSP, cameraSau, cameraTruoc, hinhSP, moTa, loaiSP);
-//gui product moi sua len api
-  console.log(product);
+  isvalid &= validation.kiemtraRong(giaSP, "txtErrorGiaSP", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      giaSP,
+      "txtErrorGiaSP",
+      "(*) chỉ được nhập số number  ",
+      /^\d+$/
 
-  api.updateProductApi(product)
-    .then(function () {
-      //close modal 
-      //close modal
-      document.getElementsByClassName("close")[0].click();
-      //render list procduct
-      getListProduct();
+    );
+
+  isvalid &= validation.kiemtraRong(manHinhSP, "txtErrorManSP", "(*) vui lòng không để trống ");
+
+  isvalid &= validation.kiemtraRong(cameraSau, "txtErrorCameraBehind", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(cameraTruoc, "txtErrorCameraFront", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(hinhSP, "txtErrorImg", "(*) vui lòng không để trống ")
+    &&
+    validation.checkPattern(
+      hinhSP,
+      "txtErrorImg",
+      "(*) chỉ được nhập url  ",
+      /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+
+    );
+  isvalid &= validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
+  isvalid &= validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
 
 
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+
+
+  //}
+
+  if (isvalid) {
+
+    //tạo đối tượng product
+    var product = new Product(
+      id,
+      tenSP,
+      giaSP,
+      manHinhSP,
+      cameraSau,
+      cameraTruoc,
+      hinhSP,
+      moTa,
+      loaiSP
+    );
+    //gui product moi sua len api
+    console.log(product);
+
+    api
+      .updateProductApi(product)
+      .then(function () {
+        //close modal
+        getListProduct();
+        document.getElementsByClassName("close")[0].click();
+        alert("cập nhật thành công: " + tenSP);
+        //render list procduct
+        getListProduct();
+        //window.location.reload();
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  return null;
 }
+

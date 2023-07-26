@@ -15,18 +15,7 @@ function Service() {
         return promise;
     };
 
-    this.timKiemProductApi = function () {
-        var promise = axios({
-            url: "https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products",
-            method: "GET",
-        });
-
-         return promise;
-        
-
-           
-
-    };
+    
 
     this.deleteProductApi = function (id) {
         var promise = axios({
