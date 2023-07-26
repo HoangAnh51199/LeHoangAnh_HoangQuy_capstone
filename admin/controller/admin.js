@@ -1,11 +1,11 @@
 var api = new Service();
-// var validation = new Validation();
+var validation = new Validation();
 
 function getEle(id) {
   return document.getElementById(id);
 }
 
-let arrApi=[]; // mang rong
+let arrApi = []; // mang rong
 
 function getListProduct() {
   var promise = api.getListProductApi();
@@ -13,10 +13,10 @@ function getListProduct() {
     .then(function (result) {
       //console.log(result);
       renderUI(result.data); //gọi hàm render truyền data(biendata=result)) , .data lay phan data api thoi.
-      
 
-      arrApi=[...result.data];
-      
+      arrApi = [...result.data];
+
+      console.log(arrApi);
     })
 
     .catch(function (error) {
@@ -26,33 +26,32 @@ function getListProduct() {
 
 getListProduct(); //gọi  function getlist để lấy dataz
 
-//  async function getJSONAsync() {
+//   async function getJSONAsync() {
 
-//   // The await keyword saves us from having to write a .then() block.
-//    let json = await axios.get('https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products');
+// //   // The await keyword saves us from having to write a .then() block.
+//     let json = await axios.get('https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products');
 
-//    //The result of the GET request is available in the json variable.
-//       //  return it just like in a regular synchronous function.
-//    return json;
-// }
-// //async giong promise
+// //    //The result of the GET request is available in the json variable.
+// //       //  return it just like in a regular synchronous function.
+//     return json;
+//  }
+// // //async giong promise
 
-//  getJSONAsync()
-//  .then(function (result) {
-//    // Do something with result.
+//   getJSONAsync()
+//   .then(function (result) {
+// //    // Do something with result.
 //    console.log(result.data);
 //    renderUI(result.data);
 //    for (var i = 0; i < result.data.length; i++) {
-//     arrApi.push(result.data[i]);
-//    console.log(arrApi);
-//    return arrApi;
+//    arrApi=[...result.data]
+//   return arrApi;
 //    }
-//})
+// })
 
-//.catch(function (error) {
-//console.log(error);
+// .catch(function (error) {
+// console.log(error);
 
-//});
+// });
 
 function renderUI(data) {
   //dat bien data để truyền result vào
@@ -109,58 +108,50 @@ function renderUI(data) {
 let arrsapXep = [];
 
 function sapXep(data) {
+  //getListProduct();
   var txtSearch = getEle("txtSearch").value;
   var sort = getEle("sapXepSP").value;
 
+
+
   if (sort === "sortMintoMax") {
-    
-    for (var i = 0; i < data.length - 1; i++) {
-      //bat dau tu dau mang
 
-      for (var j = i + 1; j < data.length; j++) {
-        if (data[i].price > data[j].price) {
-          // so sánh giá tiên
 
-          // hoan vi
-          var temp = data[i]; //vd :temp chua doi tuong tạm thời
-          data[i] = data[j]; //price 3>1 đổi chỗ vi trí [i] cho [j] vitri [i] chứa data[j]
-          data[j] = temp; //data.[j]  chứa nội dung vitri [i]
-        }
-      }
-    }
+    data.sort(function (a, b) {
+      return a.price - b.price;
+    });
+
 
     renderUI(data);
     return data;
 
-   
+
+
+
   } else if (sort === "sortMaxtoMin") {
-    for (var i = 0; i < data.length - 1; i++) {
-      //bat dau tu dau mang
 
-      for (var j = i + 1; j < data.length; j++) {
-        if (data[i].price < data[j].price) {
-          // so sánh giá tiên
 
-          //     // hoan vi
-          var temp = data[i]; //vd :temp chua doi tuong tạm thời
-          data[i] = data[j]; //price 3>1 đổi chỗ vi trí [i] cho [j] vitri [i] chứa data[j]
-          data[j] = temp; //data.[j]  chứa nội dung vitri [i]
-        }
-      }
-    }
+    data.sort(function (a, b) {
+      return b.price - a.price;
+    });
+
+
+
 
     renderUI(data);
     return data;
-    // for (var z = 0; z < clonedArrApi.length; z++) {
-    //   arrsapXep.push(clonedArrApi[z]);
-    // }
 
-    // console.log(arrsapXep);
-    // return arrsapXep;
-  } else if (sort === "" && txtSearch == "") {
-    data.splice(0, data.length);
-    getListProduct();
+
+
+
+
+
   }
+  // else if (sort === "" && txtSearch == "") {
+  //   //data.splice(0, data.length);
+  //   getListProduct();
+  // }
+  debugger
 }
 
 
@@ -177,52 +168,51 @@ function SearchProduct(data) {
   var txtSearch = getEle("txtSearch").value;
   console.log(txtSearch);
   //mảng rỗng
-  
+
   console.log(data);
 
 
   var mangTimKiem = [];
-   if(txtSearch){
+  if (txtSearch) {
+
     mangTimKiem.splice(0, data.length);
-  //   //console.log(123);
-   for (var i = 0; i < data.length; i++) {
-       //duyet result
+    //   //console.log(123);
+    for (var i = 0; i < data.length; i++) {
+      //duyet result
       var product = data[i]; // 1  doi tuong
-       var keywordLowercase = txtSearch.toLowerCase();
-     var namePDLowerCase = product.name.toLowerCase();
+      var keywordLowercase = txtSearch.toLowerCase();
+      var namePDLowerCase = product.name.toLowerCase();
       console.log(product);
 
       if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
-         mangTimKiem.push(product); //push data product vào mảng
-         
+        mangTimKiem.push(product); //push data product vào mảng
+
       }
-      
-     } 
-  
-     console.log(mangTimKiem);
-     
-      sapXep(mangTimKiem);
-     
 
-     console.log(sapXep(mangTimKiem));
-     
-     renderUI(mangTimKiem);
-     
-     
+    }
 
-    
-    
-     //mangTimKiem.splice(0, data.length);
-     
-     
-  }else if (txtSearch == ""){
+
+    console.log(mangTimKiem);
+    sapXep(mangTimKiem);
+    console.log(sapXep(mangTimKiem));
+
+    renderUI(mangTimKiem);
+    return mangTimKiem;
+
+
+
+
+
+    //mangTimKiem.splice(0, data.length);
+
+
+  } else if (txtSearch == "") {
     //mangTimKiem.splice(0, arrApi.length);
     //getListProduct();
     renderUI(data);
 
   }
-    
-  
+
 }
 
 
@@ -287,11 +277,13 @@ function addProduct() {
 
   promise
     .then(function () {
-      //re-render UI
       getListProduct();
       //close modal
-      alert("thêm "+ tenSP +" thành công");
+      alert("thêm " + tenSP + " thành công");
       document.getElementsByClassName("close")[0].click();
+
+      //re-render UI
+      getListProduct();
     })
     .catch(function (error) {
       console.log(error);
@@ -359,13 +351,16 @@ function updateProduct(id) {
     .updateProductApi(product)
     .then(function () {
       //close modal
-      //close modal
+      getListProduct();
       document.getElementsByClassName("close")[0].click();
       alert("cập nhật thành công:" + tenSP);
       //render list procduct
       getListProduct();
+      //window.location.reload();
+
     })
     .catch(function (error) {
       console.log(error);
     });
 }
+
