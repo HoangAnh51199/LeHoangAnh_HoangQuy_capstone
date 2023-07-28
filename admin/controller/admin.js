@@ -7,24 +7,7 @@ function getEle(id) {
 
 let arrApi = []; // mang rong
 
-// function getListProduct() {
-//   getEle("loader").style.display = "block";
-//   var promise = api.getListProductApi();
-//   promise
-//     .then(function (result) {
-//       //console.log(result);
-//       renderUI(result.data); //gọi hàm render truyền data(biendata=result)) , .data lay phan data api thoi.
-//       getEle("loader").style.display = "none";
-//       arrApi = [...result.data];
-//       //console.log(arrApi);
-//       return arrApi;
 
-//     })
-
-//     .catch(function (error) {
-//       console.log(error);
-//     });
-// }
 function getListProduct() {
   getEle("loader").style.display = "block";
   var promise = api.getListProductApi();
@@ -42,32 +25,7 @@ function getListProduct() {
 getListProduct()
   .then((res) => {
   })
-//   async function getJSONAsync() {
 
-// //   // The await keyword saves us from having to write a .then() block.
-//     let json = await axios.get('https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products');
-
-// //    //The result of the GET request is available in the json variable.
-// //       //  return it just like in a regular synchronous function.
-//     return json;
-//  }
-// // //async giong promise
-
-//   getJSONAsync()
-//   .then(function (result) {
-// //    // Do something with result.
-//    console.log(result.data);
-//    renderUI(result.data);
-//    for (var i = 0; i < result.data.length; i++) {
-//    arrApi=[...result.data]
-//   return arrApi;
-//    }
-// })
-
-// .catch(function (error) {
-// console.log(error);
-
-// });
 
 function renderUI(data) {
   //dat bien data để truyền result vào
@@ -126,8 +84,9 @@ let searchResults = [];
 // getEle(sapXepSP).addEventListener
 
 document.getElementById("sapXepSP").addEventListener("change", function () {
+  console.log(searchProduct().length);
   var sort = getEle("sapXepSP").value;
-  if (searchProduct.length > 0) {
+  if (searchResults.length > 0) {  //searchProduct.length (==2 ) tham số data ,sort ko phải return array
     let sortedData = sapXep(searchResults, sort);
     renderUI(sortedData);
   } else {
@@ -147,7 +106,7 @@ document.getElementById("sapXepSP").addEventListener("change", function () {
 
 function sapXep(data, sort) {
   let sortedData = [...data]; // Tạo một bản sao của mảng data để không ảnh hưởng đến dữ liệu ban đầu
-
+  console.log(sortedData);
   if (sort === "sortMintoMax") {
     sortedData.sort(function (a, b) {
       return a.price - b.price;
@@ -174,18 +133,21 @@ document.getElementById("txtSearch").addEventListener('keyup', handleSearch)
 
 
 function searchProduct(keyword, data) {
-  keyword = keyword.toLowerCase();
   var searchResults = [];
+  if(keyword){
+    keyword = keyword.toLowerCase();
+  
 
-  for (var i = 0; i < data.length; i++) {
-    var product = data[i];
-    if (product.name.toLowerCase().includes(keyword)) {
-      searchResults.push(product);
+    for (var i = 0; i < data.length; i++) {
+      var product = data[i];
+      if (product.name.toLowerCase().includes(keyword)) {
+        searchResults.push(product);
+      }
     }
+  
+    console.log(searchResults);
   }
-
-
-  console.log(searchResults);
+ 
   return searchResults;
 }
 
@@ -215,64 +177,6 @@ function handleSearch() {
 
 
 
-
-
-
-
-
-
-
-
-
-  // var sort = getEle("sapXepSP").value;
-  // console.log(txtSearch);
-  // //mảng rỗng
-
-  // console.log(data);
-
-
-  // var mangTimKiem = [];
-  // if (txtSearch) {
-
-  //   mangTimKiem.splice(0, data.length);
-  //   //   //console.log(123);
-  //   for (var i = 0; i < data.length; i++) {
-  //     //duyet result
-  //     var product = data[i]; // 1  doi tuong
-  //     var keywordLowercase = txtSearch.toLowerCase();
-  //     var namePDLowerCase = product.name.toLowerCase();
-  //     console.log(product);
-
-  //     if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
-  //       mangTimKiem.push(product); //push data product vào mảng
-
-  //     }
-
-  //   }
-
-
-  //   console.log(mangTimKiem);
-  //   sapXep(mangTimKiem);
-  //   console.log(sapXep(mangTimKiem));//undefined
-
-
-  //   renderUI(mangTimKiem);
-  //   debugger
-  //   return mangTimKiem;
-
-
-
-
-
-  //   //mangTimKiem.splice(0, data.length);
-
-
-  // } else if (txtSearch == "") {
-  //   //mangTimKiem.splice(0, arrApi.length);
-  //   //getListProduct();
-  //   renderUI(data);
-
-  // }
 
 
 
