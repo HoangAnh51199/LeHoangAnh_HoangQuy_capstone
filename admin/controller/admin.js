@@ -7,52 +7,25 @@ function getEle(id) {
 
 let arrApi = []; // mang rong
 
+
 function getListProduct() {
   getEle("loader").style.display = "block";
   var promise = api.getListProductApi();
-  promise
-    .then(function (result) {
-      //console.log(result);
-      renderUI(result.data); //gọi hàm render truyền data(biendata=result)) , .data lay phan data api thoi.
-      getEle("loader").style.display = "none";
-      arrApi = [...result.data];
-      return arrApi;
-      console.log(arrApi);
-    })
 
-    .catch(function (error) {
-      console.log(error);
-    });
+  return promise.then(function (result) {
+    getEle("loader").style.display = "none";
+    renderUI(result.data);
+    return result.data;
+  }).catch(function (error) {
+    console.log(error);
+    throw error; // Tái ném lỗi để giữ lại lỗi trong Promise
+  });
 }
 
-getListProduct(); //gọi  function getlist để lấy dataz
+getListProduct()
+  .then((res) => {
+  })
 
-//   async function getJSONAsync() {
-
-// //   // The await keyword saves us from having to write a .then() block.
-//     let json = await axios.get('https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products');
-
-// //    //The result of the GET request is available in the json variable.
-// //       //  return it just like in a regular synchronous function.
-//     return json;
-//  }
-// // //async giong promise
-
-//   getJSONAsync()
-//   .then(function (result) {
-// //    // Do something with result.
-//    console.log(result.data);
-//    renderUI(result.data);
-//    for (var i = 0; i < result.data.length; i++) {
-//    arrApi=[...result.data]
-//   return arrApi;
-//    }
-// })
-
-// .catch(function (error) {
-// console.log(error);
-
-// });
 
 function renderUI(data) {
   //dat bien data để truyền result vào
@@ -106,54 +79,48 @@ function renderUI(data) {
 //console.log(arrApi);
 //console.log(arrApi.length);
 
-let arrsapXep = [];
+let searchResults = [];
 
-function sapXep(data) {
-  //getListProduct();
-  var txtSearch = getEle("txtSearch").value;
+// getEle(sapXepSP).addEventListener
+
+document.getElementById("sapXepSP").addEventListener("change", function () {
+  console.log(searchProduct().length);
   var sort = getEle("sapXepSP").value;
+  if (searchResults.length > 0) {  //searchProduct.length (==2 ) tham số data ,sort ko phải return array
+    let sortedData = sapXep(searchResults, sort);
+    renderUI(sortedData);
+  } else {
+    // Nếu chưa tìm kiếm, lấy dữ liệu mới và sắp xếp
+    getListProduct()
+      .then((res) => {
+        let sortedData = sapXep(res, sort);
+        renderUI(sortedData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+});
 
 
 
+function sapXep(data, sort) {
+  let sortedData = [...data]; // Tạo một bản sao của mảng data để không ảnh hưởng đến dữ liệu ban đầu
+  console.log(sortedData);
   if (sort === "sortMintoMax") {
-
-
-    data.sort(function (a, b) {
+    sortedData.sort(function (a, b) {
       return a.price - b.price;
     });
-
-
-    renderUI(data);
-    return data;
-
-
-
-
   } else if (sort === "sortMaxtoMin") {
-
-
-    data.sort(function (a, b) {
+    sortedData.sort(function (a, b) {
       return b.price - a.price;
     });
-
-
-
-
-    renderUI(data);
-    return data;
-
-
-
-
-
-
-  }
-  else if (sort === "" && txtSearch == "") {
-    //data.splice(0, data.length);
-    getListProduct();
   }
 
+  return sortedData;
 }
+
+
 
 
 //var arrsapXep = sapXep();
@@ -162,57 +129,56 @@ function sapXep(data) {
 // console.log(arrApi);
 
 
+document.getElementById("txtSearch").addEventListener('keyup', handleSearch)
 
 
-function SearchProduct(data) {
-  var sort = getEle("sapXepSP").value;
-  var txtSearch = getEle("txtSearch").value;
-  console.log(txtSearch);
-  //mảng rỗng
+function searchProduct(keyword, data) {
+  var searchResults = [];
+  if(keyword){
+    keyword = keyword.toLowerCase();
+  
 
-  console.log(data);
-
-
-  var mangTimKiem = [];
-  if (txtSearch) {
-
-    mangTimKiem.splice(0, data.length);
-    //   //console.log(123);
     for (var i = 0; i < data.length; i++) {
-      //duyet result
-      var product = data[i]; // 1  doi tuong
-      var keywordLowercase = txtSearch.toLowerCase();
-      var namePDLowerCase = product.name.toLowerCase();
-      console.log(product);
-
-      if (namePDLowerCase.indexOf(keywordLowercase) !== -1) {
-        mangTimKiem.push(product); //push data product vào mảng
-
+      var product = data[i];
+      if (product.name.toLowerCase().includes(keyword)) {
+        searchResults.push(product);
       }
-
     }
-
-
-    console.log(mangTimKiem);
-    sapXep(mangTimKiem);
-    console.log(sapXep(mangTimKiem));
-
-    renderUI(mangTimKiem);
-    return mangTimKiem;
-
-
-
-
-
-    //mangTimKiem.splice(0, data.length);
-
-
-  } else if (txtSearch == "") {
-    //mangTimKiem.splice(0, arrApi.length);
-    //getListProduct();
-    renderUI(data);
-
+  
+    console.log(searchResults);
   }
+ 
+  return searchResults;
+}
+
+
+function handleSearch() {
+  var txtSearch = getEle("txtSearch").value;
+
+  getListProduct()
+    .then((res) => {
+      if (txtSearch !== "") {
+        // Nếu có từ khóa tìm kiếm, lọc dữ liệu và hiển thị kết quả tìm kiếm
+        searchResults = searchProduct(txtSearch, res);
+        let sort = getEle("sapXepSP").value;
+        let sortedData = sapXep(searchResults, sort);
+        renderUI(sortedData);
+      } else {
+        // Nếu không có từ khóa tìm kiếm, hiển thị toàn bộ dữ liệu
+        searchResults = [];
+        let sort = getEle("sapXepSP").value;
+        let sortedData = sapXep(res, sort);
+        renderUI(sortedData);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+
+
+
+
 
 }
 
