@@ -53,7 +53,7 @@ function renderCart(cart) {
   for (var i = 0; i < cart.length; i++) {
     var cartItem = cart[i];
     content += `<tr style="border-bottom: 1px solid">
-              <td style="padding:20px 15px">
+              <td style="padding:10px 15px">
               <img src="${cartItem.img}" style="width: 100px">
               </td>
               <td>${cartItem.name}</td>
