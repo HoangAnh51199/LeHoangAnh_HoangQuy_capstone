@@ -1,32 +1,80 @@
 footer {
+
+
+ 
      .container {
         max-width: 70%;
         margin: auto;
       }
+     table {
+      overflow-x: auto;
+     }
+      .footer__item{
+
+        @include MediaQuery($desktop){
+          width: 25%;
+        }
+
+        @include MediaQuery($lg){
+          width: 25%;
+        }
+
+        @include MediaQuery($md){
+          width: 50%;
+        }
+
+        @include MediaQuery($sm){
+          width: 50%;
+        }
+
+        .letter {
+          @include MediaQuery($desktop){
+            width: 25%;
+          }
+  
+          @include MediaQuery($lg){
+            width: 25%;
+          }
+  
+          @include MediaQuery($md){
+            width: 50%;
+          }
+  
+          @include MediaQuery($sm){
+            width: 50%;
+          }
+
+        }
+
+         
       
-      .footer__item h3 {
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 30px;
-        position: relative;
-        color: #fff;
-        text-align: left;
-      }
-      .footer__item ul {
-        padding: 0px;
-      }
-      .footer__item li {
-        padding: 0.5rem 0;
-        list-style: none;
-        text-align: left;
-        
+        h3 {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 30px;
+          position: relative;
+          color: #fff;
+          text-align: left;
+        }
+
+        ul {
+          padding: 0px;
+        }
+
+        li {
+          padding: 0.5rem 0;
+          list-style: none;
+          text-align: left;
+          
+        } 
+
+        a {
+          color: #ffffff;
+          font-size: 16px;
+          text-align: left;
+          text-decoration: none;
+        }
       } 
       
-      .footer__item a {
-        color: #ffffff;
-        font-size: 16px;
-        text-align: left;
-        text-decoration: none;
-      }
       
 }

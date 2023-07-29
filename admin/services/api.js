@@ -9,7 +9,7 @@ function Service() {
          * reject thất bại
          */
         var promise = axios({
-            url: "https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products",
+            url: "https://64b5375cf3dbab5a95c6f319.mockapi.io/api/product",
             method: "GET",
         });
         return promise;
@@ -19,7 +19,7 @@ function Service() {
 
     this.deleteProductApi = function (id) {
         var promise = axios({
-          url: `https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products/${id}`,
+          url: `https://64b5375cf3dbab5a95c6f319.mockapi.io/api/product/${id}`,
           method: "DELETE",
         });
     
@@ -28,7 +28,7 @@ function Service() {
 
       this.addProductApi = function (product) {//them bien product
         var promise = axios({
-          url: "https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products",
+          url: "https://64b5375cf3dbab5a95c6f319.mockapi.io/api/product",
           method: "POST",
           data: product,
         });
@@ -38,7 +38,7 @@ function Service() {
 
       this.getProductById =function (id) {
         var promise = axios({
-          url: `https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products/${id}`,
+          url: `https://64b5375cf3dbab5a95c6f319.mockapi.io/api/product/${id}`,
           method: "GET",
         });
     
@@ -47,7 +47,7 @@ function Service() {
       };
       this.updateProductApi =function (product){
         var promise = axios({
-          url: `https://64b8c9de21b9aa6eb07a37ed.mockapi.io/api/Products/${product.id}`,
+          url: `https://64b5375cf3dbab5a95c6f319.mockapi.io/api/product/${product.id}`,
           method: "PUT",
           data:product,
         });

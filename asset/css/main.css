@@ -185,9 +185,53 @@ header .navbar-collapse .cart .quality {
   font-weight: 600;
   text-align: center;
 }
+
 footer .container {
   max-width: 70%;
   margin: auto;
+}
+footer table {
+  overflow-x: auto;
+}
+@media screen and (max-width: 1600px) {
+  footer .footer__item {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 1024px) {
+  footer .footer__item {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 768px) {
+  footer .footer__item {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 568px) {
+  footer .footer__item {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 1600px) {
+  footer .footer__item .letter {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 1024px) {
+  footer .footer__item .letter {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 768px) {
+  footer .footer__item .letter {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 568px) {
+  footer .footer__item .letter {
+    width: 50%;
+  }
 }
 footer .footer__item h3 {
   font-size: 24px;
@@ -210,5 +254,4 @@ footer .footer__item a {
   font-size: 16px;
   text-align: left;
   text-decoration: none;
-
 }/*# sourceMappingURL=main.css.map */

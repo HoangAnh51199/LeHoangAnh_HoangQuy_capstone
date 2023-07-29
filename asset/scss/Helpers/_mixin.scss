@@ -8,3 +8,9 @@
     font-size: $fs;
     margin: 0 $mx;
 }
+//hoang
+@mixin MediaQuery($type){
+    @media screen and (max-width:$type){
+        @content;
+    }
+}
