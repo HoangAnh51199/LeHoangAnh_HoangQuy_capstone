@@ -250,14 +250,16 @@ function layThongTin(event) { //onkeyup,onchange
 
   switch (inputElement.id) {
     case 'TenSP':
-
-      validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
+      getListProduct()
+      .then((res) => {
+        validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
         &&
         validation.kiemtraTenSpTonTai(
           tenSP,
           "txtErrorTenSP",
           "(*) tên sản phẩm đã tồn tại",
-          arrApi // biến list 
+          res
+           // biến list 
         ) && validation.kiemtraDodaiKyTu(
           tenSP,
           "txtErrorTenSP",
@@ -265,6 +267,8 @@ function layThongTin(event) { //onkeyup,onchange
           4,
           12
         );
+      })
+     
       break;
 
     case 'GiaSP':
@@ -339,7 +343,11 @@ function addProduct(isADD) {
 
   // if (isADDTK) {//ktra bien isADD true làm trong {} ,false bỏ qua
   //   //validation taiKhoan
-  var isvalid = true;
+
+  getListProduct()
+        .then((res) => {
+        
+          var isvalid = true;
   if (isADD) {
     isvalid &= validation.kiemtraRong(tenSP, "txtErrorTenSP", "(*) vui lòng không để trống ")
       &&
@@ -347,7 +355,8 @@ function addProduct(isADD) {
         tenSP,
         "txtErrorTenSP",
         "(*) tên sản phẩm đã tồn tại",
-        arrApi // biến list 
+        res
+        // biến list 
       ) && validation.kiemtraDodaiKyTu(
         tenSP,
         "txtErrorTenSP",
@@ -384,10 +393,6 @@ function addProduct(isADD) {
   isvalid &= validation.kiemtraRong(moTa, "txtErrorDes", "(*) vui lòng không để trống ");
   isvalid &= validation.kiemtraRong(loaiSP, "txtErrorType", "(*) vui lòng không để trống ");
 
-
-
-
-
   if (isvalid) {
 
     //tạo đối tượng product từ lớp đối tượng Product
@@ -422,6 +427,10 @@ function addProduct(isADD) {
       });
   }
   return null;
+})
+
+
+  
 }
 
 function editProduct(id) {
@@ -476,7 +485,7 @@ function updateProduct(id, isADD) {
         tenSP,
         "txtErrorTenSP",
         "(*) tên sản phẩm đã tồn tại",
-        arrApi // biến list 
+        // biến list 
       ) && validation.kiemtraDodaiKyTu(
         tenSP,
         "txtErrorTenSP",
