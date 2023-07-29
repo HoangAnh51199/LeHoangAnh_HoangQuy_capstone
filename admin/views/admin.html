@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Quản lý sản phẩm</title>
+  <link rel="shortcut icon" href="#" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap"
+      rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <link rel="stylesheet" href="./../../asset/css/main.css">
+
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <nav class="navbar navbar-expand-md bg navbar">
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">CyberPhone</a>
+
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav ml-5 mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Admin</a>
+            </li>
+          </ul>
+          <div class="cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="display-4 my-4"> Quản lý sản phẩm </div>
+
+
+    <select class="form-control my-3" id="sapXepSP">
+      <span class="caret"></span>
+      <option value="">Chọn sắp xếp</option>
+
+      <option class="custom-select" value="sortMintoMax">Từ bé đến lớn</option>
+      <option class="custom-select" value="sortMaxtoMin">Từ lớn đến bé</option>
+    </select>
+
+
+    <!-- Phan tab menu -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" href="#DanhSachSP" role="tab" data-toggle="tab">Danh sách sản phẩm</a>
+      </li>
+    </ul>
+    <br />
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!--Danh sách sản phẩm -->
+      <div role="tabpanel" class="tab-pane in active" id="DanhSachSP">
+        <div class="row">
+          <div class="col-md-8">
+            <!-- BEGIN BUTTOM THÊM MỚI -->
+            <button id="btnThemSP" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+              <i class="fa fa-plus mr-1"></i>
+              Thêm Mới
+            </button>
+            <!-- END BUTTON THÊM MỚI -->
+          </div>
+          <div class="col-md-4">
+            <!-- BEGIN TÌM KIẾM -->
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa" />
+              <div class="input-group-append">
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+              </div>
+            </div>
+            <!-- END TÌM KIẾM -->
+          </div>
+        </div>
+        <div class="clear-fix"></div>
+        <div class="tblSanPham" id="tblSanPham">
+          <!-- BEGIN TABLE SẢN PHẨM -->
+          <table class="table table-bordered table-hover ">
+            <thead class="thead-dark">
+              <th>STT</th>
+              <th>Tên Sản Phẩm</th>
+              <th>Giá</th>
+              <th>Màn hình</th>
+              <th>Camera sau</th>
+              <th>Camera trước</th>
+              <th>Hình Ảnh</th>
+              <th>Mô Tả</th>
+              <th>Loại</th>
+              <th>Action</th>
+            </thead>
+            <tbody id="tblDanhSachSP">
+              <div class="spinner" id="loader">
+                <div class="spinner-grow spinner-grow-lg m-1" style="animation-duration:720ms; "></div>
+                <div class="spinner-grow spinner-grow-lg m-1" style="animation-duration: 730ms;"></div>
+                <div class="spinner-grow spinner-grow-lg m-1" style="animation-duration:740ms ;"></div>
+                <div class="spinner-grow spinner-grow-lg m-1" style="animation-duration: 750ms ;"></div>
+              </div>
+            </tbody>
+          </table>
+          <!-- END TABLE SẢN PHẨM -->
+        </div>
+        <br />
+      </div>
+      <!-- Kết thúc danh sách sản phẩm -->
+    </div>
+
+    <!--KetThuc Tabmenu-->
+
+    <div class="modal fade" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Modal Heading</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="formNhap">
+              <div class="form-group">
+                <label>Tên Sản Phẩm</label>
+                <input id="TenSP" class="form-control" placeholder="Nhập vào tên sản phẩm"
+                  onkeyup="layThongTin(event)" />
+                <div id="txtErrorTenSP" class="text-danger" style="display: block;">
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label>Giá</label>
+                <input id="GiaSP" class="form-control" placeholder="Nhập vào giá" onkeyup="layThongTin(event)" />
+                <div id="txtErrorGiaSP" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label>Màn hình</label>
+                <input id="ManHinhSP" class="form-control" placeholder="Nhập vào màn hình sản phẩm"
+                  onkeyup="layThongTin(event)" />
+                <div id="txtErrorManSP" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Camera sau</label>
+                <input id="cameraSau" class="form-control" placeholder="Nhập vào thông số camera sau sản phẩm"
+                  onkeyup="layThongTin(event)" />
+                <div id="txtErrorCameraBehind" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Camera trước</label>
+                <input id="cameraTruoc" class="form-control" placeholder="Nhập vào thông số camera trước sản phẩm"
+                  onkeyup="layThongTin(event)" />
+                <div id="txtErrorCameraFront" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Hình ảnh</label>
+                <input id="HinhSP" class="form-control" placeholder="Nhập vào hình sản phẩm"
+                  onkeyup="layThongTin(event)" />
+                <div id="txtErrorImg" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="">Mô tả: </label>
+                <textarea class="form-control" id="MoTa" cols="10" rows="10" placeholder="Nhập vào mô tả sản phẩm"
+                  onkeyup="layThongTin(event)"></textarea>
+                <div id="txtErrorDes" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Loại</label>
+                <input id="LoaiSP" class="form-control" placeholder="Nhập vào loại sản phẩm"
+                  onkeyup="layThongTin(event)" />
+                <div id="txtErrorType" class="text-danger" style="display: none;">
+                </div>
+              </div>
+
+
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- Footer -->
+  <footer class="bg-dark text-center text-white">
+    <!-- Grid container -->
+
+    <div class="container pt-5 ">
+      <div class="row justify-content-center my-2  ">
+
+        <div class="col-3  footer__item">
+          <h3>Services</h3>
+          <ul>
+            <li> <i class="fa fa-angle-right"></i> <a href="#"> Web design</a></li>
+            <li> <i class="fa fa-angle-right"></i> <a href="#"> Development</a></li>
+            <li> <i class="fa fa-angle-right"></i> <a href="#"> Hosting</a></li>
+          </ul>
+        </div>
+        <div class="col-3  footer__item">
+          <h3>About</h3>
+          <ul>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Company</a></li>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Team</a></li>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Legacy</a></li>
+          </ul>
+        </div>
+        <div class="col-3  footer__item ">
+          <h3>Careers</h3>
+          <ul>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Job openings</a></li>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Employee success</a></li>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Benefits</a></li>
+          </ul>
+        </div>
+
+        <div class="col-3  footer__item ">
+          <h3>Other links</h3>
+          <ul>
+            <li><i class="fa fa-angle-right"></i><a href="#"> FAQ</a></li>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Portfolio</a></li>
+            <li><i class="fa fa-angle-right"></i><a href="#"> Support</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 footer__item   ">
+          <h4 class="text-uppercase  font-weight-bold mb-4">Newsletter</h4>
+
+          <p class="text-muted mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. At itaque temporibus.</p>
+          <div class="p-1 rounded border">
+            <div class="input-group">
+              <input type="email" placeholder="Enter your email address" aria-describedby="button-addon1"
+                class="form-control border-0 shadow-0">
+              <div class="input-group-append">
+                <button id="button-addon1" type="submit" class="btn btn-link"><i class="fa fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Social media -->
+          <section class="m-1">
+            <!-- Facebook -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+              <i class="fa-brands fa-cc-visa" style="color: #ff0000;"></i>
+            </a>
+
+            <!-- Twitter -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+              <i class="fa fa-brands fa-facebook"></i>
+            </a>
+
+            <!-- Google -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i
+                class="fa-brands fa-google-plus-square"></i>
+            </a>
+
+            <!-- Instagram -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"><i
+                class="fa-brands fa-instagram"></i>
+            </a>
+
+
+
+            <!-- Github -->
+            <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button">
+              <i class=" fa-brands fa-github"></i>
+            </a>
+
+
+            <!-- Section: Social media -->
+        </div>
+
+      </div>
+    </div>
+
+    <hr>
+
+    <p class="copyright">Cyberphone <span> <i class="fa fa-copyright"></i></span> 2023</p>
+
+
+
+
+
+    <!-- Copyright -->
+
+
+  </footer>
+  <!-- Footer -->
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <!-- axios -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+    integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+
+  <script src="./../models/product.js"></script>
+  <script src="./../models/validation.js"></script>
+  <script src="./../services/api.js"></script>
+
+  <script src="./../controller/admin.js"></script>
+
+</body>
