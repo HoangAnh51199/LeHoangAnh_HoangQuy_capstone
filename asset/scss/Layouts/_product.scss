@@ -1,0 +1,7 @@
+.product{
+    background-color: $color-4;
+    h2{
+        @include style-text($fs-8,$color-2,$fw-2);
+        text-align: center;
+    }
+}

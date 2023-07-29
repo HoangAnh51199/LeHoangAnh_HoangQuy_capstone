@@ -1,0 +1,13 @@
+.modal{
+    .modal-title{
+        @include style-text($fs-9, $color-2, $fw-1);
+    }
+    .tableCart{
+        th{
+            padding: 20px;
+        }
+        td{
+            padding: 20px;
+        }
+    }
+}

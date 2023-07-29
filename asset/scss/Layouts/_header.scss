@@ -1,5 +1,5 @@
 header {
-  background-color: $color-1;
+  background-color: $color-4;
   width: 100%;
 
   .navbar-brand {
@@ -8,20 +8,35 @@ header {
   .navbar-collapse {
     .navbar-nav {
       .nav-link {
-        @include style-text($fs-2, $color-3, $fw-1);
+        @include style-text($fs-3, $color-3, $fw-2);
         transition: all 0.2s;
         padding: $pd-1;
+        margin-left: $mg-2;
         &:hover {
-          @include style-text($fs-2, $color-2, $fw-1);
+          @include style-text($fs-3, $color-2, $fw-2);
         }
       }
     }
     .cart{
         cursor: pointer;
+        position: relative;
         .fa-cart-shopping{
             color: $color-2;
             font-size: $fs-3;
         }
+        .quality{
+          background-color: $color-2;
+          color: $color-4;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          top: -12px;
+          left: 80%;
+          padding: 0px 5px;
+        }
     }
   }
+  
 }

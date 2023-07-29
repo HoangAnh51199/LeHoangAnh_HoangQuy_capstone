@@ -3,7 +3,7 @@
   background-image: url(../img/pexels-jessica-lewis-creative-583842.jpg);
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 800px;
   width: 100%;
   position: relative;
   .overlay {
@@ -50,6 +50,24 @@
     .img-banner{
         max-width: 100% ;
         height: auto;
+    }
+  }
+  .card{
+    position: absolute;
+    top: 0;
+    right: -100%;
+    width: 700px;
+    height: 800px;
+    z-index: 1000;
+    transition: all 0.3s;
+    h2{
+      @include style-text($fs-9, $color-2, $fw-1);
+      text-align: center;
+    }
+    .checkout{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
   }
 }
