@@ -6,9 +6,8 @@ footer {
         max-width: 70%;
         margin: auto;
       }
-     table {
-      overflow-x: auto;
-     }
+
+    
       .footer__item{
 
         @include MediaQuery($desktop){
