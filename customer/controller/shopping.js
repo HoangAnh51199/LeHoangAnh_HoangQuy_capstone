@@ -28,23 +28,25 @@ clear.addEventListener("click", () => {
 });
 purchase.addEventListener("click", () => {
   renderOrder(cart.mangGioHang);
-    var pay = 0;
-    for (var i = 0; i < cart.mangGioHang.length; i++) {
-      pay += cart.mangGioHang[i].quality * cart.mangGioHang[i].price;
-    }
-    getEle("pay").innerHTML = pay;
-    localStorage.setItem("cart", JSON.stringify(cart.mangGioHang));
-});
-order.addEventListener("click", () => {
-  if(cart.mangGioHang = []){
-    alert("Vui lòng chọn sản phẩm!")
-  }else{
-  alert("Cám ơn bạn đã mua hàng!")
-  cart.mangGioHang = [];
-  renderCart(cart.mangGioHang);
-  totalPrice();
-  totalQuality();
+  var pay = 0;
+  for (var i = 0; i < cart.mangGioHang.length; i++) {
+    pay += cart.mangGioHang[i].quality * cart.mangGioHang[i].price;
+  }
+  getEle("pay").innerHTML = pay;
   localStorage.setItem("cart", JSON.stringify(cart.mangGioHang));
+});
+
+order.addEventListener("click", () => {
+  console.log(cart.mangGioHang);
+  if (cart.mangGioHang.length===0) {
+    alert("Vui lòng chọn sản phẩm!");
+  } else{
+    alert("Cám ơn bạn đã mua hàng!");
+    cart.mangGioHang = [];
+    renderCart(cart.mangGioHang);
+    totalPrice();
+    totalQuality();
+    localStorage.setItem("cart", JSON.stringify(cart.mangGioHang));
   }
 });
 
@@ -53,7 +55,7 @@ function renderCart(cart) {
   for (var i = 0; i < cart.length; i++) {
     var cartItem = cart[i];
     content += `<tr style="border-bottom: 1px solid">
-              <td style="padding:20px 15px">
+              <td style="padding:10px 15px">
               <img src="${cartItem.img}" style="width: 100px">
               </td>
               <td>${cartItem.name}</td>
