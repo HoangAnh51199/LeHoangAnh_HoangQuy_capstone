@@ -1,30 +1,96 @@
+.card_phone {
+  box-shadow: 6px 6px 12px #e2ebfc, -6px -6px 12px #fff;
+  background-color: #f5f9fe;
+  margin-bottom: 30px;
+  border: none;
+  padding: 30px;
+}
+.card_phone .card-img-top {
+  border-radius: 8px;
+  box-shadow: 6px 6px 12px #e2ebfc, -6px -6px 12px #fff;
+}
+.card_phone .phone-name {
+  font-size: 1.8rem;
+  color: #2196f3;
+  font-weight: 600;
+}
+.card_phone .phone-desc {
+  font-size: 1.1rem;
+  color: #000;
+  font-weight: 400;
+}
+.card_phone .phone-price {
+  font-size: 1.8rem;
+  color: #2196f3;
+  font-weight: 600;
+}
+.card_phone .phone-camera {
+  font-size: 1.1rem;
+  color: #000;
+  font-weight: 400;
+}
+.card_phone .phone-screen {
+  font-size: 1.1rem;
+  color: #000;
+  font-weight: 400;
+}
+.card_phone .phone-rate {
+  color: #f9d412;
+}
+
+.modal .modal-title {
+  font-size: 2rem;
+  color: #2196f3;
+  font-weight: 400;
+}
+.modal .tableCart th {
+  padding: 20px;
+}
+.modal .tableCart td {
+  padding: 20px;
+}
+
 header {
-  background-color: #000;
+  background-color: #fff;
   width: 100%;
 }
 header .navbar-brand {
-  font-size: 2.25rem;
+  font-size: 1.8rem;
   color: #2196f3;
   font-weight: 600;
 }
 header .navbar-collapse .navbar-nav .nav-link {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: #747474;
-  font-weight: 400;
+  font-weight: 600;
   transition: all 0.2s;
   padding: 25px;
+  margin-left: 25px;
 }
 header .navbar-collapse .navbar-nav .nav-link:hover {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: #2196f3;
-  font-weight: 400;
+  font-weight: 600;
 }
 header .navbar-collapse .cart {
   cursor: pointer;
+  position: relative;
 }
 header .navbar-collapse .cart .fa-cart-shopping {
   color: #2196f3;
   font-size: 1.4rem;
+}
+header .navbar-collapse .cart .quality {
+  background-color: #2196f3;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -12px;
+  left: 80%;
+  padding: 0px 5px;
 }
 
 .banner {
@@ -32,7 +98,7 @@ header .navbar-collapse .cart .fa-cart-shopping {
   background-image: url(../img/pexels-jessica-lewis-creative-583842.jpg);
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 800px;
   width: 100%;
   position: relative;
 }
@@ -89,7 +155,36 @@ header .navbar-collapse .cart .fa-cart-shopping {
   max-width: 100%;
   height: auto;
 }
+.banner .card {
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 700px;
+  height: 800px;
+  z-index: 1000;
+  transition: all 0.3s;
+}
+.banner .card h2 {
+  font-size: 2rem;
+  color: #2196f3;
+  font-weight: 400;
+  text-align: center;
+}
+.banner .card .checkout {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
 
+.product {
+  background-color: #fff;
+}
+.product h2 {
+  font-size: 44px;
+  color: #2196f3;
+  font-weight: 600;
+  text-align: center;
+}
 footer .container {
   max-width: 70%;
   margin: auto;
@@ -115,4 +210,5 @@ footer .footer__item a {
   font-size: 16px;
   text-align: left;
   text-decoration: none;
+
 }/*# sourceMappingURL=main.css.map */

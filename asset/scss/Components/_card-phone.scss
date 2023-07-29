@@ -1,0 +1,29 @@
+.card_phone{
+    box-shadow: 6px 6px 12px #e2ebfc, -6px -6px 12px #fff;
+    background-color: $color-5;
+    margin-bottom: 30px;
+    border: none;
+    padding: 30px;
+    .card-img-top{
+        border-radius: $bd-2;
+        box-shadow: 6px 6px 12px #e2ebfc, -6px -6px 12px #fff;
+    }
+    .phone-name{
+        @include style-text($fs-6,$color-2,$fw-2);
+    }
+    .phone-desc{
+        @include style-text($fs-2,$color-1,$fw-1);
+    }
+    .phone-price{
+        @include style-text($fs-6,$color-2,$fw-2);
+    }
+    .phone-camera{
+        @include style-text($fs-2,$color-1,$fw-1);
+    }
+    .phone-screen{
+        @include style-text($fs-2,$color-1,$fw-1);
+    }
+    .phone-rate{
+        color: $color-6;
+    }
+}

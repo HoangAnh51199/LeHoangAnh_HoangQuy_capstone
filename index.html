@@ -17,9 +17,48 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="./asset/css/main.css">
+
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            /* Light grey */
+            border-top: 16px solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        body.active .banner .card {
+            right: 0;
+        }
+
+        .cover {
+            position: absolute;
+            width: 100%;
+            height: 900px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+        }
+    </style>
+
 </head>
 
 <body>
+    <div class="cover" id="cover" style="display: none;"></div>
+
     <header>
         <div class="container">
             <nav class="navbar navbar-expand-md bg navbar">
@@ -42,7 +81,8 @@
                         </li>
                     </ul>
                     <div class="cart">
-                        <i class="fa-solid fa-cart-shopping"></i>
+                        <i class="fa-solid fa-cart-shopping shopping"></i>
+                        <span id="quality" class="quality"></span>
                     </div>
                 </div>
             </nav>
@@ -50,23 +90,97 @@
     </header>
 
     <section class="banner">
-
         <div class="container">
+            <div class="card">
+                <h2>Cart</h2>
+                <table class="tableCart">
+                    <thead>
+                        <tr>
+                            <th style="padding: 15px 25px;">Ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng giá</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listCard">
+
+                    </tbody>
+                </table>
+                <div class="checkout">
+                    <div class="money">
+                        Total:
+                        <span id="total"></span>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary purchase" data-toggle="modal"
+                        data-target="#exampleModal">Purchase</button>
+                    <button type="button" class="btn btn-outline-primary clear">Clear</button>
+                    <button type="button" class="btn btn-outline-primary off">Close</button>
+
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="tableCart">
+                                <thead>
+                                    <tr>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listOrder">
+            
+                                </tbody>
+                            </table>
+                            
+                            <hr>
+                            <div class="pay">
+                                Total:
+                                <span id="pay"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            
+                            <button type="button" class="btn btn-secondary off" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary order" data-dismiss="modal">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="banner_content d-none d-md-block">
                 <h1>CYBERPHONE</h1>
                 <h2>Best Smartphone of 2023</h2>
                 <h3>Tại CyberPhone, bạn sẽ luôn có những chiếc điện thoại tốt nhất cho mình</h3>
                 <div>
-
-                    <button type="button" class="btn btn-outline-primary" onclick="location.href='./admin/views/admin.html';" >More Info</button>
-
-                    <button type="button" class="btn btn-primary">Shop</button>
+                    <button type="button" class="btn btn-outline-primary">More Info</button>
+                    <a href="#product" type="button" class="btn btn-primary">Shop</a>
                 </div>
             </div>
             <div class="overlay"></div>
         </div>
     </section>
-
+    <section class="product py-5" id="product">
+        <h2 class="py-5">-Featured Products-</h2>
+        <div class="product_content container">
+            <div id="loader" class="loader" style="display: none;"></div>
+            <select name="Chọn loại sản phẩm" onchange="chooseType();" class="my-5 form-control" id="client">
+                <option>Chọn loại sản phẩm</option>
+                <option>Iphone</option>
+                <option>Samsung</option>
+            </select>
+            <div id="productList" class="row"></div>
+        </div>
+    </section>
 
 
     <!-- Optional JavaScript -->
@@ -80,6 +194,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+        integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').trigger('focus')
+        })
+    </script>
+    <script src="./customer/services/api.js"></script>
+    <script src="./customer/models/product.js"></script>
+    <script src="./customer/models/cartItem.js"></script>
+    <script src="./customer/models/cart.js"></script>
+    <script src="./customer/controller/index.js"></script>
+    <script src="./customer/controller/shopping.js"></script>
+=======
 
         
 
@@ -189,6 +318,7 @@
   <!-- Footer -->
 
 
+>>>>>>> d150faa070408707fb8be5feeeb9449a70d95752
 </body>
 
 </html>
